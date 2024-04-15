@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:message_board_app/settings_page.dart';
+import 'profile.dart'; // Import the profile page
 import 'firebase_options.dart';
 import 'messageBoard.dart';
 
@@ -18,6 +19,7 @@ void main() async {
 class homepage extends StatefulWidget {
   final String email;
   const homepage({super.key, required this.email});
+
   @override
   State<homepage> createState() => _HomepageState(email);
 }
@@ -32,6 +34,15 @@ class _HomepageState extends State<homepage> {
         title: Text('Homepage'),
         backgroundColor: Colors.lightGreen,
         actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.account_circle, color: Colors.white),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ProfilePage()),
+              );
+            },
+          ),
           TextButton(
             onPressed: () {
               Navigator.push(
@@ -39,8 +50,8 @@ class _HomepageState extends State<homepage> {
                 MaterialPageRoute(builder: (context) => SettingsPage()),
               );
             },
-            child: Text("Settings"),
-          )
+            child: Text("Settings", style: TextStyle(color: Colors.white)),
+          ),
         ],
       ),
       body: SingleChildScrollView(
