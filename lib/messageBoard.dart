@@ -66,16 +66,18 @@ class _messageBoardState extends State<messageBoard> {
               },
             ),
           ),
-          TextField(
-            controller: _messageController,
-            decoration: InputDecoration(
-              hintText: 'Enter a message',
-              suffixIcon: IconButton(
-                onPressed: () {
-                  _sendMessage();
-                  _messageController.text = '';
-                },
-                icon: const Icon(Icons.send),
+          Card(
+            child: TextField(
+              controller: _messageController,
+              decoration: InputDecoration(
+                hintText: 'Enter a message',
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    _sendMessage();
+                    _messageController.text = '';
+                  },
+                  icon: const Icon(Icons.send),
+                ),
               ),
             ),
           ),
