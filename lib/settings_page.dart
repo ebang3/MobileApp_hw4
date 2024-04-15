@@ -29,6 +29,40 @@ class _SettingsPageState extends State<SettingsPage> {
     Navigator.of(context).popUntil((route) => route.isFirst);
   }
 
+  void emailChange() {
+    showModalBottomSheet(
+        context: context,
+        elevation: 5,
+        isScrollControlled: true,
+        builder: (_) => Container(
+            padding: EdgeInsets.fromLTRB(
+              15,
+              15,
+              15,
+              MediaQuery.of(context).viewInsets.bottom + 80,
+            ),
+            child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  TextFormField(
+                      controller: _emailController,
+                      decoration: const InputDecoration(labelText: 'New Email'),
+                      validator: (value) {
+                        if (value?.isEmpty ?? true) {
+                          return 'Please enter a New Email';
+                        }
+                        return null;
+                      }),
+                  ElevatedButton(
+                      onPressed: () {
+                        _emailController.clear();
+                        Navigator.pop(context);
+                      },
+                      child: Text('Change Email Address')),
+                ])));
+  }
+
   void passwordChange() {
     showModalBottomSheet(
         context: context,
@@ -109,7 +143,9 @@ class _SettingsPageState extends State<SettingsPage> {
                           leading: Icon(Icons.manage_accounts_outlined),
                           title: TextButton(
                             child: const Text('Change Email Address'),
-                            onPressed: () {},
+                            onPressed: () {
+                              emailChange();
+                            },
                           ))),
                   Card(
                       child: ListTile(
