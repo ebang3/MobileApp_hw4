@@ -71,13 +71,6 @@ class _SignInPage extends State<MyHomePage> {
   bool signSheet = false;
   String email = '';
 
-  void _signOut() async {
-    await _auth.signOut();
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      content: Text('Signed out successfully'),
-    ));
-  }
-
   Future<void> addUser() async {
     email = _emailController.text;
     await _user.doc(email).set({
