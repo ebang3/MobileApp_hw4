@@ -11,48 +11,75 @@ void main() async {
 }
 
 class messageBoard extends StatefulWidget {
-  final String board;
-  const messageBoard({super.key, required this.board});
+  final String board, email;
+  const messageBoard({super.key, required this.board, required this.email});
   @override
-  State<messageBoard> createState() => _messageBoardState(board);
+  State<messageBoard> createState() => _messageBoardState(board, email);
 }
 
 class _messageBoardState extends State<messageBoard> {
-  late String board = '';
-  _messageBoardState(this.board);
+  late final String board, email;
+  _messageBoardState(this.board, this.email);
 
   late final CollectionReference _messageBoard =
       FirebaseFirestore.instance.collection(board);
 
   final TextEditingController _messageController = TextEditingController();
 
+  Future<void> _sendMessage([DocumentSnapshot? documentSnapshot]) async {
+    await _messageBoard
+        .add({"message": _messageController.text, "time": DateTime.now()});
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('$board Message Board'),
       ),
-      body: StreamBuilder(
-        stream: _messageBoard.snapshots(),
-        builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
-          if (streamSnapshot.hasData) {
-            return ListView.builder(
-              itemCount: streamSnapshot.data!.docs.length,
-              itemBuilder: (context, index) {
-                final DocumentSnapshot documentSnapshot =
-                    streamSnapshot.data!.docs[index];
-                return Card(
-                  margin: const EdgeInsets.all(10),
-                  child: ListTile(
-                    title: Text(documentSnapshot['message']),
-                  ),
+      body: Column(
+        children: [
+          Expanded(
+            child: StreamBuilder(
+              stream: _messageBoard.snapshots(),
+              builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+                if (streamSnapshot.hasData) {
+                  return ListView.builder(
+                    reverse: true,
+                    itemCount: streamSnapshot.data!.docs.length,
+                    itemBuilder: (context, index) {
+                      final DocumentSnapshot documentSnapshot =
+                          streamSnapshot.data!.docs[index];
+                      return Card(
+                        margin: const EdgeInsets.all(10),
+                        child: ListTile(
+                            title: Text(documentSnapshot['message']),
+                            subtitle: Text(email),
+                            trailing: Text(
+                                documentSnapshot['time'].toDate().toString())),
+                      );
+                    },
+                  );
+                }
+                return const Center(
+                  child: CircularProgressIndicator(),
                 );
               },
-            );
-          }
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        },
+            ),
+          ),
+          TextField(
+            controller: _messageController,
+            decoration: InputDecoration(
+              hintText: 'Enter a message',
+              suffixIcon: IconButton(
+                onPressed: () {
+                  _sendMessage();
+                  _messageController.text = '';
+                },
+                icon: const Icon(Icons.send),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

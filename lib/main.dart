@@ -69,6 +69,7 @@ class _SignInPage extends State<MyHomePage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool signSheet = false;
+  String email = '';
 
   void _signOut() async {
     await _auth.signOut();
@@ -78,7 +79,8 @@ class _SignInPage extends State<MyHomePage> {
   }
 
   Future<void> addUser() async {
-    await _user.add({
+    email = _emailController.text;
+    await _user.doc(email).set({
       "firstName": _firstNameController.text,
       "lastName": _lastNameController.text,
       'registration': DateTime.now(),
@@ -108,6 +110,7 @@ class _SignInPage extends State<MyHomePage> {
   }
 
   void _signIn() async {
+    email = _emailController.text;
     try {
       await _auth.signInWithEmailAndPassword(
         email: _emailController.text,
@@ -117,8 +120,8 @@ class _SignInPage extends State<MyHomePage> {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Signed in successfully'),
         ));
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => homepage()));
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => homepage(email: email)));
       });
     } catch (e) {
       setState(() {

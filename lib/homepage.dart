@@ -13,16 +13,20 @@ void main() async {
 }
 
 class homepage extends StatefulWidget {
-  const homepage({super.key});
+  final String email;
+  const homepage({super.key, required this.email});
   @override
-  State<homepage> createState() => _HomepageState();
+  State<homepage> createState() => _HomepageState(email);
 }
 
 class _HomepageState extends State<homepage> {
+  late String email;
+  _HomepageState(this.email);
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Message Board App - Homepage'),
+        title: Text('Homepage'),
         backgroundColor: Colors.lightGreen,
       ),
       body: SingleChildScrollView(
@@ -39,8 +43,8 @@ class _HomepageState extends State<homepage> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    messageBoard(board: 'gaming')));
+                                builder: (context) => messageBoard(
+                                    board: 'gaming', email: email)));
                       }),
                 ),
               ),
@@ -53,8 +57,8 @@ class _HomepageState extends State<homepage> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    messageBoard(board: 'study')));
+                                builder: (context) => messageBoard(
+                                    board: 'study', email: email)));
                       }),
                 ),
               ),
@@ -68,7 +72,7 @@ class _HomepageState extends State<homepage> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    messageBoard(board: 'gym')));
+                                    messageBoard(board: 'gym', email: email)));
                       }),
                 ),
               ),
